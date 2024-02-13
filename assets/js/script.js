@@ -1,5 +1,6 @@
 const numbers = document.querySelectorAll('button[data-type="digit"]');
 const operands = document.querySelectorAll('button[data-type="operand"]');
+const equals = document.querySelector('button[data-type="final"]');
 const primaryScreen = document.querySelector(".primary-screen");
 const secondaryScreen = document.querySelector(".secondary-screen");
 
@@ -9,20 +10,64 @@ let op = "";
 let final = false;
 
 
+const displayHandle = content => {
+
+    const opSymbols = ["+", "-", "*", "/"]
+
+    if(opSymbols.includes(content)){
+
+        if(secondaryScreen.innerText===""){
+
+            // firstInput = parseFloat(primaryScreen.innerText);
+            op = content;
+            firstInput = parseFloat(primaryScreen.innerText)
+            secondaryScreen.innerText = primaryScreen.innerText + " " + content;
+            primaryScreen.innerText = "" 
+    
+        }
+        
+        else{
+            firstInput = parseFloat(secondaryScreen.innerText);
+            secondInput = parseFloat(primaryScreen.innerText)
+            console.log(firstInput, secondInput)
+            operation(firstInput, secondInput, op)
+            op = content
+            secondaryScreen.innerText = secondaryScreen.innerText +" "+op
+        }
+        return
+    }
+    
+    if(content==="." && primaryScreen.innerText.includes(".")){
+                return
+        }
+    if(!isNaN(parseInt(content)) || content==="."){
+        primaryScreen.innerText = primaryScreen.innerText + content;
+    }
+
+}
+
+// --------- ADDITION --------------------
 const add = (firstNumber, secondNumber) => {
     let result = firstNumber + secondNumber
     return result
 }
+
+// --------- SUBTRACTION --------------------
 const subtract = (firstNumber, secondNumber) => {
     return firstNumber - secondNumber
 }
+
+// --------- MULTIPLICATION --------------------
 const multiply = (firstNumber, secondNumber) => {
     return firstNumber * secondNumber
 }
+
+// --------- DIVISION --------------------
 const divide = (firstNumber, secondNumber) => {
     return firstNumber / secondNumber
 }
 
+// --------- OPERATION FXN --------------------
 const operation = (firstInput, secondInput, op) => {
 
     let result = 0
@@ -55,42 +100,67 @@ const operation = (firstInput, secondInput, op) => {
 
     secondaryScreen.innerText = result
     primaryScreen.innerText = ""
-    // firstInput = 0;
-    // firstInput = parseFloat(secondaryScreen.innerText);
-    // console.log(firstInput)
     secondInput = 0;
 
 }
 
-numbers.forEach(num => num.addEventListener("click", (e)=>{
+// --------- NUMBER BUTTONS --------------------
+numbers.forEach(num => num.addEventListener("click", (e)=>displayHandle(e.target.innerText)))
 
-    if(num.innerText==="." && primaryScreen.innerText.includes(".")){
-        return
-    }
+// numbers.forEach(num => num.addEventListener("click", ()=>{
 
-    primaryScreen.innerText = primaryScreen.innerText + num.innerText;
+//     if(num.innerText==="." && primaryScreen.innerText.includes(".")){
+//         return
+//     }
 
-}))
+//     primaryScreen.innerText = primaryScreen.innerText + num.innerText;
 
+// }))
+
+
+// --------- OPERAND BUTTONS --------------------
 operands.forEach(operand => operand.addEventListener("click", (e)=>{
 
-    if(secondaryScreen.innerText===""){
+    displayHandle(e.target.innerText)
 
-        // firstInput = parseFloat(primaryScreen.innerText);
-        op = operand.innerText;
-        secondaryScreen.innerText = primaryScreen.innerText + op;
-        primaryScreen.innerText = "" 
-
-    }
+}
     
-    else{
-        firstInput = parseFloat(secondaryScreen.innerText);
+// {
+
+//     if(secondaryScreen.innerText===""){
+
+//         // firstInput = parseFloat(primaryScreen.innerText);
+//         op = operand.innerText;
+//         secondaryScreen.innerText = primaryScreen.innerText + op;
+//         primaryScreen.innerText = "" 
+
+//     }
+    
+//     else{
+//         firstInput = parseFloat(secondaryScreen.innerText);
+//         secondInput = parseFloat(primaryScreen.innerText)
+//         console.log(firstInput, secondInput)
+//         operation(firstInput, secondInput, op)
+//         op = operand.innerText
+//         secondaryScreen.innerText = secondaryScreen.innerText + operand.innerText
+//     }
+    
+// }
+))
+
+equals.addEventListener("click", () => {
+    final = true;
+    secondInput = parseFloat(primaryScreen.innerText)
+    operation(firstInput, secondInput, op)
+})
+
+document.body.addEventListener("keydown", (e)=>{
+
+    if(e.key === "Enter"){
+        final = true;
         secondInput = parseFloat(primaryScreen.innerText)
-        console.log(firstInput, secondInput)
         operation(firstInput, secondInput, op)
-        op = operand.innerText
-        secondaryScreen.innerText = secondaryScreen.innerText + operand.innerText
+        return
     }
-    
-
-}))
+    displayHandle(e.key)
+})
