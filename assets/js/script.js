@@ -1,6 +1,7 @@
 const numbers = document.querySelectorAll('button[data-type="digit"]');
 const operands = document.querySelectorAll('button[data-type="operand"]');
 const equals = document.querySelector('button[data-type="final"]');
+const clear = document.querySelectorAll('button[data-type="delete"]')
 const primaryScreen = document.querySelector(".primary-screen");
 const secondaryScreen = document.querySelector(".secondary-screen");
 
@@ -33,6 +34,7 @@ const displayHandle = content => {
             operation(firstInput, secondInput, op)
             op = content
             secondaryScreen.innerText = secondaryScreen.innerText +" "+op
+            // primaryScreen.innerText = ""
         }
         return
     }
@@ -98,9 +100,9 @@ const operation = (firstInput, secondInput, op) => {
         return
     }
 
-    secondaryScreen.innerText = result
-    primaryScreen.innerText = ""
-    secondInput = 0;
+        secondaryScreen.innerText = result
+        primaryScreen.innerText = ""
+        secondInput = 0;
 
 }
 
@@ -148,19 +150,42 @@ operands.forEach(operand => operand.addEventListener("click", (e)=>{
 // }
 ))
 
+// --------- EQUAL BUTTON --------------------
 equals.addEventListener("click", () => {
-    final = true;
-    secondInput = parseFloat(primaryScreen.innerText)
-    operation(firstInput, secondInput, op)
-})
-
-document.body.addEventListener("keydown", (e)=>{
-
-    if(e.key === "Enter"){
+    if(secondaryScreen.innerText != ""){
         final = true;
         secondInput = parseFloat(primaryScreen.innerText)
         operation(firstInput, secondInput, op)
+    }
+    else{
         return
     }
-    displayHandle(e.key)
+    
+})
+
+// --------- CLEAR BUTTON --------------------
+clear.forEach(x=> x.addEventListener("click", ()=>{
+    if(x.innerText === "AC"){
+        primaryScreen.innerText = "";
+        secondaryScreen.innerText = ""
+        return
+    }
+    primaryScreen.innerText.splice(0,-1)
+}))
+
+// --------- KEYBOARD --------------------
+document.body.addEventListener("keydown", (e)=>{
+    console.log(typeof e.key)
+    if(e.key === "Enter"){
+        if(secondaryScreen.innerText != "" && op && firstInput){
+            final = true
+            secondInput = parseFloat(primaryScreen.innerText)
+            operation(firstInput, secondInput, op)
+            return
+        }
+        else{return}
+    }
+    else{
+        displayHandle(e.key)
+    }
 })

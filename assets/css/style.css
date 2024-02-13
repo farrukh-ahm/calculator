@@ -90,6 +90,6 @@ body{
 
 }
 
-.btn[data-type="clear"]{
+.btn[data-type="delete"]:first-of-type{
     grid-column: span 2;
 }
