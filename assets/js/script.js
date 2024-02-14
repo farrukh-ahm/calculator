@@ -5,8 +5,8 @@ const clear = document.querySelectorAll('button[data-type="delete"]')
 const primaryScreen = document.querySelector(".primary-screen");
 const secondaryScreen = document.querySelector(".secondary-screen");
 
-let firstInput = 0;
-let secondInput = 0;
+let firstInput;
+let secondInput;
 let op = "";
 let final = false;
 
@@ -15,7 +15,7 @@ const displayHandle = content => {
 
     const opSymbols = ["+", "-", "*", "/"]
 
-    if(opSymbols.includes(content)){
+    if(opSymbols.includes(content) && primaryScreen.innerText !== ""){
 
         if(secondaryScreen.innerText===""){
 
@@ -73,7 +73,7 @@ const divide = (firstNumber, secondNumber) => {
 const operation = (firstInput, secondInput, op) => {
 
     let result = 0
-    console.log(op)
+    // console.log(op)
 
     switch(op){
         case "+":
@@ -91,6 +91,7 @@ const operation = (firstInput, secondInput, op) => {
     }
 
     if(final){
+        console.log(result)
         primaryScreen.innerText = result;
         secondaryScreen.innerText = "";
         firstInput = 0;
@@ -102,6 +103,7 @@ const operation = (firstInput, secondInput, op) => {
 
         secondaryScreen.innerText = result
         primaryScreen.innerText = ""
+        // firstInput = result;
         secondInput = 0;
 
 }
@@ -154,6 +156,7 @@ operands.forEach(operand => operand.addEventListener("click", (e)=>{
 equals.addEventListener("click", () => {
     if(secondaryScreen.innerText != ""){
         final = true;
+        firstInput = parseFloat(secondaryScreen.innerText)
         secondInput = parseFloat(primaryScreen.innerText)
         operation(firstInput, secondInput, op)
     }
@@ -170,20 +173,24 @@ clear.forEach(x=> x.addEventListener("click", ()=>{
         secondaryScreen.innerText = ""
         return
     }
-    primaryScreen.innerText.splice(0,-1)
+    primaryScreen.innerText = primaryScreen.innerText.slice(0,-1)
 }))
 
 // --------- KEYBOARD --------------------
 document.body.addEventListener("keydown", (e)=>{
-    console.log(typeof e.key)
+    console.log(e.key)
     if(e.key === "Enter"){
         if(secondaryScreen.innerText != "" && op && firstInput){
             final = true
+            firstInput = parseFloat(secondaryScreen.innerText)
             secondInput = parseFloat(primaryScreen.innerText)
             operation(firstInput, secondInput, op)
             return
         }
         else{return}
+    }
+    else if(e.key === "Backspace"){
+        primaryScreen.innerText = primaryScreen.innerText.slice(0,-1)
     }
     else{
         displayHandle(e.key)
