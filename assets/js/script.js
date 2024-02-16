@@ -1,7 +1,7 @@
-const numbers = document.querySelectorAll('button[data-type="digit"]');
-const operands = document.querySelectorAll('button[data-type="operand"]');
-const equals = document.querySelector('button[data-type="final"]');
-const clear = document.querySelectorAll('button[data-type="delete"]')
+const numbers = document.querySelectorAll('div[data-type="digit"]');
+const operands = document.querySelectorAll('div[data-type="operand"]');
+const equals = document.querySelector('div[data-type="final"]');
+const clear = document.querySelectorAll('div[data-type="delete"]')
 const primaryScreen = document.querySelector(".primary-screen");
 const secondaryScreen = document.querySelector(".secondary-screen");
 
@@ -9,7 +9,7 @@ let firstInput;
 let secondInput;
 let op = "";
 let final = false;
-
+let duration = "400";
 
 const displayHandle = content => {
 
@@ -19,7 +19,6 @@ const displayHandle = content => {
 
         if(secondaryScreen.innerText===""){
 
-            // firstInput = parseFloat(primaryScreen.innerText);
             op = content;
             firstInput = parseFloat(primaryScreen.innerText)
             secondaryScreen.innerText = primaryScreen.innerText + " " + content;
@@ -28,13 +27,12 @@ const displayHandle = content => {
         }
         
         else{
+
             firstInput = parseFloat(secondaryScreen.innerText);
             secondInput = parseFloat(primaryScreen.innerText)
-            console.log(firstInput, secondInput)
             operation(firstInput, secondInput, op)
             op = content
             secondaryScreen.innerText = secondaryScreen.innerText +" "+op
-            // primaryScreen.innerText = ""
         }
         return
     }
@@ -45,6 +43,13 @@ const displayHandle = content => {
     if(!isNaN(parseInt(content)) || content==="."){
         primaryScreen.innerText = primaryScreen.innerText + content;
     }
+
+}
+
+const buttonGlow = cont => {
+
+    document.querySelector(`div[data-in='${cont}']`).classList.toggle("toggle")
+    setTimeout(() => {document.querySelector(`div[data-in='${cont}']`).classList.toggle("toggle")}, `${duration}`)
 
 }
 
@@ -73,25 +78,23 @@ const divide = (firstNumber, secondNumber) => {
 const operation = (firstInput, secondInput, op) => {
 
     let result = 0
-    // console.log(op)
 
     switch(op){
         case "+":
-            result = add(firstInput, secondInput)
+            result = Math.round((add(firstInput, secondInput) + Number.EPSILON)*100)/100
             break
         case "-":
-            result = subtract(firstInput, secondInput)
+            result = Math.round((subtract(firstInput, secondInput) + Number.EPSILON)*100)/100
             break
         case "*":
-            result = multiply(firstInput, secondInput)
+            result = Math.round((multiply(firstInput, secondInput) + Number.EPSILON)*100)/100
             break
         case "/":
-            result = divide(firstInput, secondInput)
+            result = Math.round((divide(firstInput, secondInput) + Number.EPSILON)*100)/100
             break
     }
 
     if(final){
-        console.log(result)
         primaryScreen.innerText = result;
         secondaryScreen.innerText = "";
         firstInput = 0;
@@ -101,65 +104,29 @@ const operation = (firstInput, secondInput, op) => {
         return
     }
 
-        secondaryScreen.innerText = result
+        secondaryScreen.innerText = result;
         primaryScreen.innerText = ""
-        // firstInput = result;
         secondInput = 0;
 
 }
 
-// --------- NUMBER BUTTONS --------------------
+// --------- NUMBER divS --------------------
 numbers.forEach(num => num.addEventListener("click", (e)=>{
-    
-    document.querySelector(`button[data-in='${e.target.innerText}']`).classList.toggle("toggle")
-    setTimeout(() => {document.querySelector(`button[data-in='${e.target.innerText}']`).classList.toggle("toggle")}, "500")
-    
+
+    buttonGlow(e.target.innerText)
     displayHandle(e.target.innerText)
 
 })
 )
 
-// numbers.forEach(num => num.addEventListener("click", ()=>{
-
-//     if(num.innerText==="." && primaryScreen.innerText.includes(".")){
-//         return
-//     }
-
-//     primaryScreen.innerText = primaryScreen.innerText + num.innerText;
-
-// }))
-
-
 // --------- OPERAND BUTTONS --------------------
 operands.forEach(operand => operand.addEventListener("click", (e)=>{
 
-    document.querySelector(`button[data-in='${e.target.innerText}']`).classList.toggle("toggle")
-    setTimeout(() => {document.querySelector(`button[data-in='${e.target.innerText}']`).classList.toggle("toggle")}, "500")
+    document.querySelector(`div[data-in='${e.target.innerText}']`).classList.toggle("toggle")
+    setTimeout(() => {document.querySelector(`div[data-in='${e.target.innerText}']`).classList.toggle("toggle")}, `${duration}`)
     displayHandle(e.target.innerText)
 
 }
-    
-// {
-
-//     if(secondaryScreen.innerText===""){
-
-//         // firstInput = parseFloat(primaryScreen.innerText);
-//         op = operand.innerText;
-//         secondaryScreen.innerText = primaryScreen.innerText + op;
-//         primaryScreen.innerText = "" 
-
-//     }
-    
-//     else{
-//         firstInput = parseFloat(secondaryScreen.innerText);
-//         secondInput = parseFloat(primaryScreen.innerText)
-//         console.log(firstInput, secondInput)
-//         operation(firstInput, secondInput, op)
-//         op = operand.innerText
-//         secondaryScreen.innerText = secondaryScreen.innerText + operand.innerText
-//     }
-    
-// }
 ))
 
 // --------- EQUAL BUTTON --------------------
@@ -167,7 +134,7 @@ equals.addEventListener("click", () => {
     if(secondaryScreen.innerText != "" && op && firstInput && primaryScreen.innerText != ""){
         
         equals.classList.toggle("toggle");
-        setTimeout(() => {equals.classList.toggle("toggle")}, "500")
+        setTimeout(() => {equals.classList.toggle("toggle")}, `${duration}`)
         
         final = true;
         firstInput = parseFloat(secondaryScreen.innerText)
@@ -184,27 +151,25 @@ equals.addEventListener("click", () => {
 // --------- CLEAR BUTTON --------------------
 clear.forEach(x=> x.addEventListener("click", ()=>{
     if(x.innerText === "AC"){
-        x.classList.toggle("toggle");
-        setTimeout(() => {x.classList.toggle("toggle")}, "500")
+        buttonGlow("AC");
         primaryScreen.innerText = "";
         secondaryScreen.innerText = "";
         firstInput = 0
         secondInput = 0
         return
     }
-    x.classList.toggle("toggle");
-    setTimeout(() => {x.classList.toggle("toggle")}, "500")
+    buttonGlow("DE");
     primaryScreen.innerText = primaryScreen.innerText.slice(0,-1)
 }))
 
 // --------- KEYBOARD --------------------
 document.body.addEventListener("keydown", (e)=>{
-    console.log(e.key)
-    if(e.key === "Enter"){
+    if(e.key === "Enter" || e.key === "="){
+
         if(secondaryScreen.innerText != "" && op && firstInput && primaryScreen.innerText != ""){
             
             equals.classList.toggle("toggle");
-            setTimeout(() => {equals.classList.toggle("toggle")}, "500")
+            setTimeout(() => {equals.classList.toggle("toggle")}, `${duration}`)
             
             final = true
             firstInput = parseFloat(secondaryScreen.innerText)
@@ -213,17 +178,20 @@ document.body.addEventListener("keydown", (e)=>{
             
             return
         }
+
         else{return}
     }
+
     else if(e.key === "Backspace"){
-        document.querySelector("button[data-in='DE']").classList.toggle("toggle")
-        setTimeout(() => {document.querySelector("button[data-in='DE']").classList.toggle("toggle")}, "500")
+
+        buttonGlow("DE")
         primaryScreen.innerText = primaryScreen.innerText.slice(0,-1)
+
     }
+
     else{
 
-        document.querySelector(`button[data-in='${e.key}']`).classList.toggle("toggle")
-        setTimeout(() => {document.querySelector(`button[data-in='${e.key}']`).classList.toggle("toggle")}, "500")
+        buttonGlow(e.key)
         displayHandle(e.key)
 
     }
