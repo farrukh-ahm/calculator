@@ -10,6 +10,8 @@
     --display-color: #099FFF;
     --button-hover: #FD1C03;
     --shadow: #d8d8d8;
+    --shadow-2: #636363;
+    --shadow-3: #3b3b3b;
 }
 
 body{
@@ -24,15 +26,14 @@ body{
 .container {
 
     inline-size: 100vw;
-    block-size: 80vh;
+    block-size: 80%;
     background-color: rgba(226, 246, 249, 0.5);
-    /* backdrop-filter: blur(8px); */
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: space-around;
     flex-direction: column;
-    box-shadow: 0 0 20px var(--shadow);
+    box-shadow: 0 0 25px var(--shadow);
 
 }
 
@@ -40,7 +41,7 @@ body{
 
     .container{
         inline-size: 30rem;
-        block-size: 45rem;
+        block-size: 80vh;
     }
 
 }
@@ -48,7 +49,7 @@ body{
 .screen-container {
 
     inline-size: 90%;
-    min-block-size: 10%;
+    min-block-size: 16%;
     border: 1px solid var(--display-color);
     display: flex;
     flex-direction: column;
@@ -94,23 +95,14 @@ body{
     block-size: 2.5em;
     font-size: 1em;
     border: 1px var(--display-color) solid;
-    /* outline: none;
-    background: none; */
     color: var(--display-color);
     cursor: pointer;
-    transition: all 0.15s ease-in;
     display: grid;
     place-content: center;
-    font-family: "Orbitron", sans-serif
-    /* text-align: center; */
+    font-family: "Orbitron", sans-serif;
 
 }
 
-/* .btn:hover{
-    color: var(--button-hover);
-    border-color: var(--button-hover);
-    box-shadow: 0 0 2px var(--button-hover);
-} */
 
 .btn[data-type="delete"]:first-of-type{
     grid-column: span 2;

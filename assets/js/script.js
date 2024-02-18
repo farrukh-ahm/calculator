@@ -9,7 +9,7 @@ let firstInput;
 let secondInput;
 let op = "";
 let final = false;
-let duration = "400";
+let duration = "300";
 
 const displayHandle = content => {
 
